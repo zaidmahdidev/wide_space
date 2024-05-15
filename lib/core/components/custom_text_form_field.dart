@@ -107,7 +107,7 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
         inputFormatters: [
           if (widget.numberFormatter)

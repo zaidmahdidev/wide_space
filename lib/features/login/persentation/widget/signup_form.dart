@@ -1,37 +1,36 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_portal_app/core/components/custom_snak_bar.dart';
-import 'package:student_portal_app/core/utils/constant/theme.dart';
-import 'package:student_portal_app/features/home/presentation/page/home.dart';
-import 'package:student_portal_app/features/login/persentation/management/login_cubit.dart';
-import 'package:student_portal_app/features/login/persentation/management/login_state.dart';
-import 'package:student_portal_app/features/login/persentation/page/signup.dart';
-import 'package:student_portal_app/features/splash/presentation/page/splash_screen.dart';
+import 'package:student_portal_app/features/login/persentation/page/login.dart';
 
 import '../../../../core/components/custom_button.dart';
+import '../../../../core/components/custom_snak_bar.dart';
 import '../../../../core/components/custom_text_form_field.dart';
-import '../../../../core/layout/layout.dart';
-import '../../../../core/utils/common_utils.dart';
+import '../../../../core/utils/constant/theme.dart';
+import '../management/login_cubit.dart';
+import '../management/login_state.dart';
 
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignUpFormState extends State<SignUpForm> {
+
   var userNameController = TextEditingController();
+  var phoneNumberController = TextEditingController();
+  var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
 
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginCubit,LoginState>(builder: (context, state) {
+    return  BlocConsumer<LoginCubit,LoginState>(builder: (context, state) {
 
       return Container(
         decoration: BoxDecoration(
@@ -46,7 +45,7 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "تسجيل الدخول" , style: MyTheme.textStyle20,),
+                "انشاء حساب" , style: MyTheme.textStyle20,),
               const SizedBox(height: 20),
               Form(
                 key: formKey,
@@ -64,6 +63,23 @@ class _LoginFormState extends State<LoginForm> {
 
                     MyTextFormField(
                       borderRadius: 10,
+                      labelText: "الايميل",
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                    ),
+
+                    MyTextFormField(
+                      borderRadius: 10,
+                      labelText: "رقم الهاتف",
+                      prefixIcon: const Icon(Icons.phone),
+                      keyboardType: TextInputType.phone,
+                      controller: phoneNumberController,
+                    ),
+
+
+                    MyTextFormField(
+                      borderRadius: 10,
                       labelText: "كلمة السر",
                       prefixIcon: const Icon(Icons.lock),
                       controller: passwordController,
@@ -76,13 +92,13 @@ class _LoginFormState extends State<LoginForm> {
                           LoginCubit.get(context).userLogin(username: userNameController.text, password: passwordController.text);
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
                         }
-                      },text: "تسجيل الدخول",radius: 10,) ,
+                      },text: "انشاء حساب",radius: 10,) ,
                       fallback: (context) => Center(child: CircularProgressIndicator(),),),
 
                     const SizedBox(height: 15),
                     TextButton(onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
-                    }, child: Text('انشاء حساب')),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
+                    }, child: const Text('تسجيل الدخول')),
                     const SizedBox(height: 15),
                   ],
                 ),

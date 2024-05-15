@@ -1,20 +1,22 @@
-import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
-import 'package:student_portal_app/core/components/custom_button.dart';
-import '../../../../core/components/custom_text_form_field.dart';
-import '../widget/login_form.dart';
+import 'package:student_portal_app/features/login/persentation/widget/signup_form.dart';
+
 import '../widget/login_header.dart';
 
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-
+class _SignUpScreenState extends State<SignUpScreen> {
+  var useNameController = TextEditingController();
+  var passwordController = TextEditingController();
+  var formKey = GlobalKey<FormState>();
+  AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
+  String? username, password;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,10 @@ class LoginBody extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).secondaryHeaderColor,
           ),
-          child: Column(
+          child: const Column(
             children: [
-              const LoginHeader(),
-              LoginForm(),
+              LoginHeader(),
+              SignUpForm(),
             ],
           ),
         ),
@@ -55,8 +57,3 @@ class LoginBody extends StatelessWidget {
     );
   }
 }
-
-
-
-
-

@@ -44,6 +44,7 @@ class RemoteDataProvider {
         await di.sl<OAuth>().refreshAccessToken().then((value) async {
           try {
             response = await sendUsing(requestType, url, body);
+
           } catch (e) {
             di.logger.d(e);
           }
@@ -164,6 +165,7 @@ class RemoteDataProvider {
       di.logger.d('remote catch', error: e, stackTrace: s);
       rethrow;
     }
+
   }
 
   Future<Response<dynamic>> sendUsing(

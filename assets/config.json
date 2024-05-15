@@ -1,0 +1,12 @@
+{
+  "baseUrl": "https://ebnbalady.widespace.tech/",
+  "clientId": "2",
+  "clientSecret": "st50khlD8l0oDBLv6iYzKpGp5ioIsJ7hEDvShuDL",
+  "logSecretCode": "735356",
+  "privacyPolicy": "https://ebnbalady.widespace.tech/ebn_balady_app_privacy_policy",
+  "termsOfUse": "https://ebnbalady.widespace.tech/ebn_balady_app_terms_of_use",
+  "supportLink": "https://ebnbalady.widespace.tech/ebn_balady_app_support",
+  "androidAppUrl": "https://play.google.com/store/apps/details?id=co.widespace.market",
+  "iOSAppUrl": "https://apps.apple.com/us/app/ebn_balady/id1",
+  "forceUpdate": false
+}

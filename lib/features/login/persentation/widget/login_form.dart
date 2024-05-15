@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,9 +33,6 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit,LoginState>(builder: (context, state) {
-      if(state is LoginLoadingDataState){
-        return Center(child: CircularProgressIndicator(),);
-      }
 
       return Container(
         decoration: BoxDecoration(
@@ -71,51 +69,17 @@ class LoginForm extends StatelessWidget {
                       prefixIcon: const Icon(Icons.lock),
                       controller: passwordController,
                     ),
-
-
-                    // CustomTextFormAuth(
-                    //   hinttext: "ادخل الرقم الاكاديمي",
-                    //   isNumber: false,
-                    //   borderRadius: 10,
-                    //   labeltext:"الرقم الاكاديمي",
-                    //   mycontroller: useNameController,
-                    //   obscureText: false,
-                    //   prefixIcon: Icons.person,
-                    //   valid: (val) {
-                    //     if (val?.isEmpty == true) {
-                    //       return "الحقل متطلب";
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
-                    // const SizedBox(height: 15),
-                    // CustomTextFormAuth(
-                    //   hinttext: "ادخل كلمة السر",
-                    //   isNumber: false,
-                    //   labeltext: "كلمة السر",
-                    //   borderRadius: 10,
-                    //   mycontroller: passwordController,
-                    //   prefixIcon: Icons.lock_outline,
-                    //   // obscureText: LoginCubit.get(context).obscureText,
-                    //   // iconData: LoginCubit.get(context).suffix,
-                    //   onTapIcon: () {
-                    //
-                    //   },
-                    //   valid: (val) {
-                    //     if (val?.isEmpty == true) {
-                    //       return "الحقل مطلوب";
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
                     const SizedBox(height: 40),
-                    customButton(fun: (){
-                      if(formKey.currentState!.validate()){
+                    ConditionalBuilder(condition: state is! LoginLoadingDataState,
+                        builder: (context) => customButton(fun: (){
+                          if(formKey.currentState!.validate()){
 
-                        LoginCubit.get(context).userLogin(username: userNameController.text, password: passwordController.text);
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
-                      }
-                    },text: "تسجيل الدخول",radius: 10,),
+                            LoginCubit.get(context).userLogin(username: userNameController.text, password: passwordController.text);
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
+                          }
+                        },text: "تسجيل الدخول",radius: 10,) ,
+                        fallback: (context) => Center(child: CircularProgressIndicator(),),),
+
 
                     const SizedBox(height: 15),
                   ],

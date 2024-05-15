@@ -22,7 +22,7 @@ import 'oauth_repository.dart';
 
 class LoginRepository extends Repository {
   Future<Either<Failure, dynamic>> sendLoginRequest({
-    required String username,
+    required String email,
     required String password,
   }) async {
     return await sendRequest(
@@ -33,18 +33,16 @@ class LoginRepository extends Repository {
               await oAuth.storage.clear();
               await oAuth.requestTokenAndSave(
                 PasswordGrant(
-                  username: username,
+                  email: email,
                   password: password,
-                  scope: [],
                 ),
               );
             }
             await oAuth.storage.clear();
             await oAuth.requestTokenAndSave(
               PasswordGrant(
-                username: username,
+                email: email,
                 password: password,
-                scope: [],
               ),
             );
           } on DioException catch (e) {
@@ -63,12 +61,10 @@ class LoginRepository extends Repository {
           try {
             remoteData = await remoteDataProvider.sendData(
                 requestType: RequestTypes.post,
-                url: 'http://he508kf1xfx.sn.mynetname.net:4146/api/auth/login',
-                retrievedDataType: LoginModel.init(),
+                url: 'https://student.valuxapps.com/api/login',
                 cacheKey: 'CACHED_USER',
                 body: {
-                  // 'grant_type': 'password',
-                  'username': username,
+                  'email': email,
                   'password': password,
                 }
             );

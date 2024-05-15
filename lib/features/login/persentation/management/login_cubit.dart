@@ -32,7 +32,7 @@ class LoginCubit extends Cubit<LoginState> {
   }) async {
     emit(LoginLoadingDataState());
     final failureOrData = await loginRepository
-        .sendLoginRequest(username: username, password: password);
+        .sendLoginRequest(email: username, password: password);
     failureOrData.fold(
       (failure) {
         emit(LoginErrorDataState(error: failureOrData.toString()));

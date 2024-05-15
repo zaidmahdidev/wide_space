@@ -25,7 +25,7 @@ import 'package:logger/logger.dart';
 import 'package:oauth_dio/oauth_dio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:student_portal_app/features/login/data/repository/login_repo.dart';
-import 'package:student_portal_app/features/login/persentation/management/login_cubit.dart';
+import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
 import 'package:timeago/timeago.dart' as time_ago;
 
 import 'core/constants.dart';
@@ -45,7 +45,6 @@ import 'core/network/network_info.dart';
 
 import 'features/login/data/repository/oauth_repository.dart';
 
-
 final sl = GetIt.instance;
 Logger logger = Logger();
 bool enableLoggerDebugMode = true;
@@ -55,12 +54,11 @@ Future<void> initialize() async {
 * Core
 */
 
-
   // init network
   sl.registerLazySingleton<NetworkInfo>(() =>
       NetworkInfo(connectionChecker: sl.get<InternetConnectionChecker>()));
   sl.registerLazySingleton<InternetConnectionChecker>(
-          () => InternetConnectionChecker());
+      () => InternetConnectionChecker());
 
   // init theme and orientation
 
@@ -135,8 +133,9 @@ Future<void> initialize() async {
 // }
 
 void _initUserFeature() {
-  if (!GetIt.instance.isRegistered<LoginCubit>()) {
-    GetIt.instance.registerFactory<LoginCubit>(() => LoginCubit(loginRepository: LoginRepository()));
+  if (!GetIt.instance.isRegistered<UserBloc>()) {
+    GetIt.instance.registerFactory<UserBloc>(
+        () => UserBloc(loginRepository: LoginRepository()));
   }
 }
 
@@ -154,7 +153,7 @@ Future _initializeHiveBoxes() async {
 
     // Load encryptionKey
     var encryptionKey =
-    base64Url.decode(await secureStorage.read(key: 'key') ?? '');
+        base64Url.decode(await secureStorage.read(key: 'key') ?? '');
 
     await Hive.openBox(
       'AUTH_CACHE_BOX',
@@ -186,7 +185,7 @@ Future _initializeHiveBoxes() async {
 
 Future _initializeRemoteConfig() async {
   return Future.value(FirebaseRemoteConfig.instance).then<FirebaseRemoteConfig>(
-        (remoteConfig) async {
+    (remoteConfig) async {
       await remoteConfig.setDefaults(
         json.decode(await rootBundle.loadString(configPath)),
       );
@@ -208,7 +207,6 @@ Future _initializeDio() async {
   String? token;
 
   if (!Platform.isWindows) {
-
     // ignore:unawaited_futures
     FirebaseMessaging.instance.getToken().then((value) => token = value);
   }
@@ -221,12 +219,12 @@ Future _initializeDio() async {
       baseUrl: 'https://student.valuxapps.com/api/',
       responseType: ResponseType.json,
       headers: {
-        'Accept' : 'application/json' ,
+        'Accept': 'application/json',
         'content-type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
         'x-platform': 'mobile',
         'x-locale':
-        Get.locale?.languageCode ?? Get.deviceLocale?.languageCode ?? 'ar',
+            Get.locale?.languageCode ?? Get.deviceLocale?.languageCode ?? 'ar',
         if (deviceInfo is AndroidDeviceInfo) ...{
           'x-device-id': deviceInfo.id,
           'x-device-brand': deviceInfo.brand,
@@ -246,39 +244,39 @@ Future _initializeDio() async {
       },
     ),
   )..interceptors.addAll(
-    [
-      LogInterceptor(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        logPrint: kDebugMode ? print : logger.d,
-      ),
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          options.headers.addAll({
-            if (token != null) 'x-device-token': token,
-          });
+      [
+        LogInterceptor(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          logPrint: kDebugMode ? print : logger.d,
+        ),
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            options.headers.addAll({
+              if (token != null) 'x-device-token': token,
+            });
 
-          return handler.next(options);
-        },
-      ),
-    ],
-  );
+            return handler.next(options);
+          },
+        ),
+      ],
+    );
 
   sl.registerLazySingleton<OAuthRepository>(() => OAuthRepository());
 
   final oauth = OAuth(
     tokenUrl: 'https://student.valuxapps.com/api/login',
     clientId: /*"2",*/
-    sl<FirebaseRemoteConfig>().getString('clientId'),
+        sl<FirebaseRemoteConfig>().getString('clientId'),
     clientSecret: /*"st50khlD8l0oDBLv6iYzKpGp5ioIsJ7hEDvShuDL",*/
-    sl<FirebaseRemoteConfig>().getString('clientSecret'),
+        sl<FirebaseRemoteConfig>().getString('clientSecret'),
     storage: sl<OAuthRepository>(),
     dio: dio,
   );
 
   dio.interceptors.add(BearerInterceptor(oauth));
-  sl.registerFactory(() => LoginCubit(loginRepository: sl<LoginRepository>()));
+  sl.registerFactory(() => UserBloc(loginRepository: sl<LoginRepository>()));
 
   sl.registerLazySingleton(() => oauth);
   sl.registerLazySingleton(() => dio);

@@ -2,14 +2,13 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_portal_app/core/layout/layout.dart';
+import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
 import 'package:student_portal_app/features/login/persentation/page/login.dart';
 
 import '../../../../core/components/custom_button.dart';
 import '../../../../core/components/custom_snak_bar.dart';
 import '../../../../core/components/custom_text_form_field.dart';
 import '../../../../core/utils/constant/theme.dart';
-import '../management/login_cubit.dart';
-import '../management/login_state.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -28,7 +27,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginCubit, LoginState>(
+    return BlocConsumer<UserBloc, UserState>(
       builder: (context, state) {
         if (state is SignUpSuccessDataState) {
           if (state.loginModel.status) {
@@ -93,11 +92,17 @@ class _SignUpFormState extends State<SignUpForm> {
                         builder: (context) => customButton(
                           fun: () {
                             if (formKey.currentState!.validate()) {
-                              LoginCubit.get(context).userSignUp(
-                                  username: userNameController.text,
-                                  email: emailController.text,
-                                  phonNumber: phoneNumberController.text,
-                                  password: passwordController.text);
+                              BlocProvider.of<UserBloc>(context).add(
+                                  SignUpEvent(
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      phonNumber: phoneNumberController.text,
+                                      username: userNameController.text));
+                              // LoginCubit.get(context).userSignUp(
+                              //     username: userNameController.text,
+                              //     email: emailController.text,
+                              //     phonNumber: phoneNumberController.text,
+                              //     password: passwordController.text);
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
                             }
                           },

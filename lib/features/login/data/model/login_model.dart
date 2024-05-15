@@ -62,15 +62,7 @@ import 'dart:convert';
 //   }
 // }
 
-
-
-
-
-
-
-
-
-class LoginModel extends Equatable{
+class LoginModel extends Equatable {
   final bool status;
   final String message;
   final Data data;
@@ -81,24 +73,25 @@ class LoginModel extends Equatable{
     required this.data,
   });
 
-  factory LoginModel.fromRawJson(String str) => LoginModel.fromJson(json.decode(str));
+  factory LoginModel.fromRawJson(String str) =>
+      LoginModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
   factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
-    status: json["status"],
-    message: json["message"],
-    data: Data.fromJson(json["data"]),
-  );
+        status: json["status"],
+        message: json["message"],
+        data: Data.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "data": data.toJson(),
-  };
+        "status": status,
+        "message": message,
+        "data": data.toJson(),
+      };
 
   @override
-  List<Object?> get props => [message,status];
+  List<Object?> get props => [message, status];
 }
 
 class Data {
@@ -127,27 +120,36 @@ class Data {
   String toRawJson() => json.encode(toJson());
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["id"],
-    name: json["name"],
-    email: json["email"],
-    phone: json["phone"],
-    image: json["image"],
-    points: json["points"],
-    credit: json["credit"],
-    token: json["token"],
-  );
+        id: json["id"],
+        name: json["name"],
+        email: json["email"],
+        phone: json["phone"],
+        image: json["image"],
+        points: json["points"],
+        credit: json["credit"],
+        token: json["token"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-    "phone": phone,
-    "image": image,
-    "points": points,
-    "credit": credit,
-    "token": token,
-  };
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "image": image,
+        "points": points,
+        "credit": credit,
+        "token": token,
+      };
 
-
-
+  factory Data.init() {
+    return Data(
+        id: 0,
+        name: '',
+        email: '',
+        phone: '',
+        image: '',
+        points: 0,
+        credit: 0,
+        token: '');
+  }
 }

@@ -74,7 +74,6 @@ class LoginRepository extends Repository {
         });
   }
 
-
   Future<Either<Failure, dynamic>> sendSignUpRequest(
       {required String username,
       required String email,
@@ -87,7 +86,7 @@ class LoginRepository extends Repository {
         try {
           remoteData = await remoteDataProvider.sendData(
             url: 'https://student.valuxapps.com/api/register',
-            // retrievedDataType: UserModel.init(),
+            retrievedDataType: Data.init(),
             returnType: Map,
             body: {
               'name': username,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:student_portal_app/core/network/end_point.dart';
 import 'package:student_portal_app/features/login/data/repository/login_repo.dart';
-import 'package:student_portal_app/features/login/persentation/management/login_cubit.dart';
+import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
 import 'applocalizations/applpcalizations.dart';
 import 'core/utils/theme/themes.dart';
 import 'features/home/management/home/home_cubit.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // BlocProvider<LoginCubit>(
         //     create: (_) => di.sl.get<LoginCubit>()),
         BlocProvider(
-          create: (context) => LoginCubit(loginRepository: LoginRepository()),
+          create: (context) => UserBloc(loginRepository: LoginRepository()),
         ),
       ],
       child: BlocBuilder<HomeCubit, HomeState>(

@@ -6,7 +6,7 @@ import 'package:student_portal_app/injection_container.dart' as di;
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oauth_dio/oauth_dio.dart';
 
-import '../../../../core/constants.dart';
+// import '../../../../core/constants.dart';
 import '../../../../core/data_providers/remote_data_provider.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
@@ -18,7 +18,6 @@ import 'oauth_repository.dart';
 // import '../models/map_service_points_model.dart';
 // import '../models/user_model.dart';
 // import 'oauth_repository.dart';
-
 
 class LoginRepository extends Repository {
   Future<Either<Failure, dynamic>> sendLoginRequest({
@@ -50,8 +49,8 @@ class LoginRepository extends Repository {
                 (e.response!.data as Map).containsKey('errors')) {
               throw CustomException(
                   message: ((e.response!.data['errors'] as Map)[
-                  (e.response!.data['errors'] as Map).keys.first]
-                  as List)[0]);
+                          (e.response!.data['errors'] as Map).keys.first]
+                      as List)[0]);
             } else {
               throw InvalidException();
             }
@@ -66,8 +65,7 @@ class LoginRepository extends Repository {
                 body: {
                   'email': email,
                   'password': password,
-                }
-            );
+                });
           } on OfflineException catch (e, s) {
             di.logger.d('login catch', error: e, stackTrace: s);
             rethrow;
@@ -77,6 +75,37 @@ class LoginRepository extends Repository {
   }
 
 
+  Future<Either<Failure, dynamic>> sendSignUpRequest(
+      {required String username,
+      required String email,
+      required String phonenumber,
+      required String password}) async {
+    return await sendRequest(
+      checkConnection: networkInfo.isConnected,
+      remoteFunction: () async {
+        final dynamic remoteData;
+        try {
+          remoteData = await remoteDataProvider.sendData(
+            url: 'https://student.valuxapps.com/api/register',
+            // retrievedDataType: UserModel.init(),
+            returnType: Map,
+            body: {
+              'name': username,
+              'phone': phonenumber,
+              'email': email,
+              'password': password,
+            },
+            cacheKey: 'CACHED_USER',
+          );
+        } on OfflineException catch (e, s) {
+          di.logger.d('signup catch', error: e, stackTrace: s);
+          rethrow;
+        }
+
+        return remoteData;
+      },
+    );
+  }
 
   // Future<Either<Failure, dynamic>> sendSignUpRequest(
   //     {required LoginModel user, required String password}) async {

@@ -11,19 +11,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   static LoginCubit get(context) => BlocProvider.of(context);
 
-  // LoginModel ?loginModel;
-
-  IconData suffix = Icons.visibility_outlined;
-  bool obscureText = true;
-
-  void changePasswordVisibility(String type) {
-    obscureText = !obscureText;
-    suffix =
-        obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined;
-
-    emit(ChangePasswordVisibility());
-  }
-
   final LoginRepository loginRepository;
 
   void userLogin({
@@ -31,14 +18,36 @@ class LoginCubit extends Cubit<LoginState> {
     required String password,
   }) async {
     emit(LoginLoadingDataState());
-    final failureOrData = await loginRepository
-        .sendLoginRequest(email: username, password: password);
+    final failureOrData = await loginRepository.sendLoginRequest(
+        email: username, password: password);
     failureOrData.fold(
       (failure) {
         emit(LoginErrorDataState(error: failureOrData.toString()));
       },
       (data) {
         emit(LoginSuccessDataState(loginModel: data));
+      },
+    );
+  }
+
+  void userSignUp({
+    required String username,
+    required String email,
+    required String phonNumber,
+    required String password,
+  }) async {
+    emit(LoginLoadingDataState());
+    final failureOrData = await loginRepository.sendSignUpRequest(
+        email: username,
+        username: username,
+        phonenumber: phonNumber,
+        password: password);
+    failureOrData.fold(
+      (failure) {
+        emit(SignUpErrorDataState(error: failureOrData.toString()));
+      },
+      (data) {
+        emit(SignUpSuccessDataState(loginModel: data));
       },
     );
   }

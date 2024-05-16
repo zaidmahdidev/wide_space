@@ -70,17 +70,22 @@ dependencies:
   carousel_slider: ^4.2.1
   flutter_staggered_animations: ^1.1.1
   firebase_core: ^2.31.0
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/image/logo.png
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -97,6 +102,7 @@ flutter:
   assets:
     - assets/
     - assets/image/
+    - assets/image/logo.png
     - assets/lang/
   #   - images/a_dot_ham.jpeg
 

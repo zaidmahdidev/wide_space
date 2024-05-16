@@ -10,7 +10,7 @@ class LocalDataProvider<T> {
     required String boxKey,
     required String boxName,
   }) async {
-    logger.v('cacheData Hive');
+    logger.t('cacheData Hive');
 
     return Future.value(const FlutterSecureStorage())
         .then((secureStorage) async {
@@ -32,7 +32,7 @@ class LocalDataProvider<T> {
     required Iterable<T> data,
     required String boxName,
   }) async {
-    logger.v('cacheData Hive');
+    logger.t('cacheData Hive');
     await Hive.box<T>(boxName).addAll(data);
   }
 
@@ -40,7 +40,7 @@ class LocalDataProvider<T> {
     required String boxName,
     required T data,
   }) async {
-    logger.v('cacheData Hive');
+    logger.t('cacheData Hive');
     await Hive.box<T>(boxName).add(data);
   }
 
@@ -48,7 +48,7 @@ class LocalDataProvider<T> {
     required String boxName,
     required T data,
   }) async {
-    logger.v('addToSingleValueCacheData Hive');
+    logger.t('addToSingleValueCacheData Hive');
     await Hive.box<T>(boxName).clear();
     await Hive.box<T>(boxName).add(data);
   }
@@ -58,7 +58,7 @@ class LocalDataProvider<T> {
     required T data,
     required dynamic key,
   }) async {
-    logger.v('addToCacheDataWithKey Hive');
+    logger.t('addToCacheDataWithKey Hive');
     await Hive.box<T>(boxName).put(key, data);
   }
 
@@ -67,7 +67,7 @@ class LocalDataProvider<T> {
     required T data,
     required dynamic key,
   }) async {
-    logger.v('updateKeyValueCacheData Hive');
+    logger.t('updateKeyValueCacheData Hive');
     await addKeyValueToCacheData(
       boxName: boxName,
       data: data,
@@ -78,8 +78,8 @@ class LocalDataProvider<T> {
   List<dynamic> getCachedData({
     required String boxName,
   }) {
-    logger.v('getCachedData Hive');
-    logger.v('getCachedData Hive  ${Hive.box<T>(boxName).values.toList()}');
+    logger.t('getCachedData Hive');
+    logger.t('getCachedData Hive  ${Hive.box<T>(boxName).values.toList()}');
     return Hive.box<T>(boxName).values.toList();
   }
 
@@ -96,7 +96,7 @@ class LocalDataProvider<T> {
   Future<int> clearCache({
     required String boxName,
   }) async {
-    logger.v('clearCache Hive');
+    logger.t('clearCache Hive');
     return await Hive.box<T>(boxName).clear();
   }
 
@@ -104,14 +104,14 @@ class LocalDataProvider<T> {
     required String boxName,
     required dynamic key,
   }) async {
-    logger.v('deleteSingleValueCacheData Hive');
+    logger.t('deleteSingleValueCacheData Hive');
     await Hive.box<T>(boxName).delete(key);
   }
 
   Future<void> closeHiveBox({
     required String boxName,
   }) async {
-    logger.v('closeHiveBox Hive');
+    logger.t('closeHiveBox Hive');
     await Hive.box<T>(boxName).close();
   }
 }

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:student_portal_app/core/network/end_point.dart';
+import 'package:student_portal_app/features/home/data/home_repo.dart';
+import 'package:student_portal_app/features/home/presentation/management/bloc/home_bloc.dart';
 import 'package:student_portal_app/features/login/data/repository/login_repo.dart';
 import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
+import 'package:student_portal_app/features/onboarding/presentation/page/onboarding.dart';
 import 'applocalizations/applpcalizations.dart';
 import 'core/utils/theme/themes.dart';
-import 'features/home/management/home/home_cubit.dart';
-import 'features/home/management/home/home_state.dart';
+import 'features/home/presentation/management/home/home_cubit.dart';
+import 'features/home/presentation/management/home/home_state.dart';
 import 'features/splash/presentation/page/splash_screen.dart';
 import 'injection_container.dart' as di;
 
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit(),
+          create: (context) => HomeBloc(homeRepository: HomeRepository()),
         ),
         // BlocProvider<LoginCubit>(
         //     create: (_) => di.sl.get<LoginCubit>()),
@@ -30,10 +33,12 @@ class MyApp extends StatelessWidget {
           create: (context) => UserBloc(loginRepository: LoginRepository()),
         ),
       ],
-      child: BlocBuilder<HomeCubit, HomeState>(
+      child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return  MaterialApp(
-            themeMode:  HomeCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
+            // themeMode:  HomeCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
+            themeMode: BlocProvider.of<HomeBloc>(context).homeRepository.isDark ? ThemeMode.dark : ThemeMode.light,
+
             // themeMode: ThemeMode.light,
             darkTheme: darkTheme,
             theme: lightTheme,
@@ -69,7 +74,7 @@ class MyApp extends StatelessWidget {
             // home: BlocBuilder<InternetCubit,InternetState>(
             //   builder: (context, state) => !IS_CONNECTED? const Splash_Screen():const Scaffold(body: Center(child: Text('no Internet '),)),
             // ),
-            home: const SplashScreen(),
+            home: const OnBoarding(),
             // home: IS_CONNECTED? Splash_Screen():Scaffold()
           );
         },

@@ -92,6 +92,7 @@ class _SignUpFormState extends State<SignUpForm> {
                         builder: (context) => customButton(
                           fun: () {
                             if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
                               BlocProvider.of<UserBloc>(context).add(
                                   SignUpEvent(
                                       email: emailController.text,
@@ -104,6 +105,11 @@ class _SignUpFormState extends State<SignUpForm> {
                               //     phonNumber: phoneNumberController.text,
                               //     password: passwordController.text);
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
+                            }else{
+                              autoValidateMode = AutovalidateMode.always;
+                              setState(() {
+
+                              });
                             }
                           },
                           text: "انشاء حساب",

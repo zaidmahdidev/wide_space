@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:student_portal_app/core/components/base_animationl_istview.dart';
 import 'package:student_portal_app/core/utils/constant/images.dart';
 import 'package:student_portal_app/core/utils/constant/theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:student_portal_app/features/home/presentation/management/bloc/home_bloc.dart';
+import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,118 +21,142 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 3.2,
-              child: const MyCarouselSlider(
-                title: [
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                  'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
-                ],
-                imagePaths: [
-                  Images.banner,
-                  Images.banner2,
-                  Images.banner3,
-                  Images.banner,
-                  Images.banner2,
-                  Images.banner3
-                ],
-              ),
-            ),
-
-
-            Expanded(
-                child: Stack(
+        body: BlocConsumer<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if(state is HomeErrorDataState){
+          return Center(
+              child: Text(state.error),
+            );
+        }
+        if(state is HomeLoadingDataState){
+          return const  Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+        if (state is HomeSuccessDataState) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(80),
-                  child: Image.asset(Images.logo),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3.2,
+                  child: const MyCarouselSlider(
+                    title: [
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                      'استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش  استمر يا وحش ',
+                    ],
+                    imagePaths: [
+                      Images.banner,
+                      Images.banner2,
+                      Images.banner3,
+                      Images.banner,
+                      Images.banner2,
+                      Images.banner3
+                    ],
+                  ),
                 ),
-                ListView.builder(
-                  itemCount: 100,
-                  itemBuilder: (context, index) {
-                    return BaseAnimationListView(
-                      index: 0,
-                      child: Card(
-                        elevation: 2,
-                        shadowColor: MyTheme.primaryColor,
-                        child: ListTile(
-                          leading: const CircleAvatar(child: Icon(Icons.local_library),),
-                          title: const Text('الحاسوب '),
-                          subtitle: Text('من أجمل التخصصات '),
-                          trailing: Icon(Icons.arrow_forward_sharp),
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  height: MediaQuery.of(context).size.height / 1.5,
-                                  child: ListView.builder(
-                                    itemCount: 20,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                          child: BaseAnimationListView(
-                                            index: 0,
-                                            child: Card(
-                                              elevation: 3,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: ListTile(
-                                                title: const Text(
-                                                  'تقنية معلومات',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                Expanded(
+                    child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(80),
+                      child: Image.asset(Images.logo),
+                    ),
+                    ListView.builder(
+                      itemCount: 100,
+                      itemBuilder: (context, index) {
+                        return BaseAnimationListView(
+                          index: 0,
+                          child: Card(
+                            elevation: 2,
+                            shadowColor: MyTheme.primaryColor,
+                            child: ListTile(
+                              leading: const CircleAvatar(
+                                child: Icon(Icons.local_library),
+                              ),
+                              title: const Text('الحاسوب '),
+                              subtitle: Text('من أجمل التخصصات '),
+                              trailing: Icon(Icons.arrow_forward_sharp),
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              1.5,
+                                      child: ListView.builder(
+                                        itemCount: 20,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 8),
+                                              child: BaseAnimationListView(
+                                                index: 0,
+                                                child: Card(
+                                                  elevation: 3,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: ListTile(
+                                                    title: const Text(
+                                                      'تقنية معلومات',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                    subtitle: const Text(
+                                                      'وصف مختصر للتخصص',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    leading: const CircleAvatar(
+                                                      // backgroundColor: Colors.blue,
+                                                      child: Icon(
+                                                        Icons.menu_book_sharp,
+                                                        // color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      // اتخذ إجراء عند النقر على التخصص
+                                                    },
                                                   ),
                                                 ),
-                                                subtitle: const Text(
-                                                  'وصف مختصر للتخصص',
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                leading: const CircleAvatar(
-                                                  // backgroundColor: Colors.blue,
-                                                  child: Icon(
-                                                    Icons.menu_book_sharp,
-                                                    // color: Colors.white,
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  // اتخذ إجراء عند النقر على التخصص
-                                                },
-                                              ),
-                                            ),
-                                          )
-                                      );
-                                    },
-                                  ),
+                                              ));
+                                        },
+                                      ),
+                                    );
+                                  },
                                 );
                               },
-                            );
-
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ))
               ],
-            ))
-          ],
-        ),
-      ),
-    );
+            ),
+          );
+        } else
+          return SizedBox();
+      },
+      listener: (context, state) {},
+    ));
   }
 }
 
@@ -189,16 +216,12 @@ class _FFFState extends State<FFF> {
   }
 }
 
-
-
-
-
-
 class MyCarouselSlider extends StatefulWidget {
   final List<String> imagePaths;
   final List<String> title;
 
-  const MyCarouselSlider({super.key, required this.imagePaths, required this.title});
+  const MyCarouselSlider(
+      {super.key, required this.imagePaths, required this.title});
 
   @override
   _MyCarouselSliderState createState() => _MyCarouselSliderState();
@@ -237,12 +260,12 @@ class _MyCarouselSliderState extends State<MyCarouselSlider> {
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: Text(widget.title[index]
-                      ,style: const TextStyle(color: Colors.white),
+                    child: Text(
+                      widget.title[index],
+                      style: const TextStyle(color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
-
                 ],
               ),
             );
@@ -269,7 +292,7 @@ class _MyCarouselSliderState extends State<MyCarouselSlider> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             widget.imagePaths.length,
-                (index) => GestureDetector(
+            (index) => GestureDetector(
               onTap: () {
                 setState(() {
                   _currentIndex = index;
@@ -281,7 +304,9 @@ class _MyCarouselSliderState extends State<MyCarouselSlider> {
                 margin: const EdgeInsets.symmetric(horizontal: 2.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _currentIndex == index ? MyTheme.primaryColor : Colors.grey,
+                  color: _currentIndex == index
+                      ? MyTheme.primaryColor
+                      : Colors.grey,
                 ),
               ),
             ),
@@ -291,4 +316,3 @@ class _MyCarouselSliderState extends State<MyCarouselSlider> {
     );
   }
 }
-

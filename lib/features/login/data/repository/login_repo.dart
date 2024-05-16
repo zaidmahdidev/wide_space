@@ -62,6 +62,7 @@ class LoginRepository extends Repository {
                 requestType: RequestTypes.post,
                 url: 'https://student.valuxapps.com/api/login',
                 cacheKey: 'CACHED_USER',
+                returnType: dynamic,
                 body: {
                   'email': email,
                   'password': password,

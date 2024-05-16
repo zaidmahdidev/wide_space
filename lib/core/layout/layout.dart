@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:student_portal_app/core/utils/constant/images.dart';
-import 'package:student_portal_app/features/home/management/home/home_cubit.dart';
+import 'package:student_portal_app/features/home/presentation/management/bloc/home_bloc.dart';
 import 'package:student_portal_app/features/profile/presentation/page/profile.dart';
-
-import '../../features/home/management/home/home_state.dart';
 import '../../features/home/presentation/page/home.dart';
 import '../utils/constant/theme.dart';
-
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -19,7 +16,7 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   var _currentIndex = 0;
-  List<Widget> screen =[
+  List<Widget> screen = [
     HomeScreen(),
     ProfileScreen(),
     FFF(),
@@ -34,69 +31,85 @@ class _LayoutState extends State<Layout> {
     "الملف الشخصي",
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer:  Drawer(
+      endDrawer: Drawer(
         child: Column(
           children: [
-
-            BlocBuilder<HomeCubit,HomeState>(builder: (context, state) {
-              return Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration:  BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(20),
-                            bottomLeft: Radius.circular(20),
-                        ),
-                        color: Theme.of(context).secondaryHeaderColor
+            BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                return Stack(
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              bottomRight: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
+                            ),
+                            color: Theme.of(context).secondaryHeaderColor),
+                        child: Image.asset(
+                          Images.logo,
+                          height: 150,
+                        )),
+                    Positioned(
+                      child: IconButton(
+                          onPressed: () {
+                            // HomeCubit.get(context).changMode();
+                            BlocProvider.of<HomeBloc>(context)
+                                .add(ChangModeEvent());
+                          },
+                          icon: BlocProvider.of<HomeBloc>(context).homeRepository.isDark
+                              ? const Icon(
+                                  Icons.light_mode,
+                                  color: Colors.white,
+                                  size: 30,
+                                )
+                              : Icon(
+                                  Icons.dark_mode,
+                                  color: Colors.white,
+                                  size: 30,
+                                )),
                     ),
-                    child: Image.asset(Images.logo ,height: 150,)
-                  ),
-                  Positioned(
-                    child:  IconButton(onPressed: (){
-                      HomeCubit.get(context).changMode();
-                    },  icon: HomeCubit.get(context).isDark ? Icon(Icons.light_mode , color: Colors.white ,size: 30,):Icon(Icons.dark_mode , color: Colors.white ,size: 30,)
-                    ),
-                  ),
-                ],
-              );
-            },),
+                  ],
+                );
+              },
+            ),
             ListTile(
-              onTap: (){},
+              onTap: () {},
               title: Text('المقررات'),
             ),
             ListTile(
-              onTap: (){},
+              onTap: () {},
               title: Text('عن الجامعة'),
-            ),ListTile(
-              onTap: (){},
+            ),
+            ListTile(
+              onTap: () {},
               title: Text('تغيير كلمة السر'),
             ),
             ListTile(
-              onTap: (){},
+              onTap: () {},
               title: Text('حول التطبيق '),
             ),
             const Spacer(),
             const Text('اصدار التطبيق 1.0.2'),
-            const SizedBox(height: 5,),
+            const SizedBox(
+              height: 5,
+            ),
           ],
         ),
       ),
-      appBar: AppBar(title: Text(
-        title[_currentIndex]
-      ),
-      centerTitle: true,
+      appBar: AppBar(
+        title: Text(title[_currentIndex]),
+        centerTitle: true,
       ),
       body: screen[_currentIndex],
-
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
-        onTap: (i) { setState(() => _currentIndex = i);
+        onTap: (i) {
+          setState(() => _currentIndex = i);
         },
         items: [
           /// Home
@@ -112,6 +125,7 @@ class _LayoutState extends State<Layout> {
             title: const Text("النتائج"),
             selectedColor: Colors.pink,
           ),
+
           /// Likes
           SalomonBottomBarItem(
             icon: Icon(Icons.home),

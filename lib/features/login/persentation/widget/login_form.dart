@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_portal_app/core/components/custom_snak_bar.dart';
 import 'package:student_portal_app/core/utils/constant/theme.dart';
+import 'package:student_portal_app/features/home/presentation/management/bloc/home_bloc.dart';
 import 'package:student_portal_app/features/home/presentation/page/home.dart';
 import 'package:student_portal_app/features/login/persentation/management/bloc/user_bloc.dart';
 import 'package:student_portal_app/features/login/persentation/page/signup.dart';
@@ -74,15 +75,23 @@ class _LoginFormState extends State<LoginForm> {
                           builder: (context) => customButton(
                             fun: () {
                               if (formKey.currentState!.validate()) {
-                                BlocProvider.of<UserBloc>(context).add(LoginEvent(
-                                    email: userNameController.text,
-                                    password: passwordController.text));
+                                formKey.currentState!.save();
+                                // BlocProvider.of<UserBloc>(context).add(LoginEvent(
+                                //     email: userNameController.text,
+                                //     password: passwordController.text));
+                                BlocProvider.of<HomeBloc>(context).add(GetHomeDataEvent(token: 'NJcmCRTSX5MpqOP6eio321lyaXU68WMTjyyaHxuV6yBmM4UwY3k0SoPN8neLwQsEvCpnUo'));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Layout(),));
+                              }else{
+                                autoValidateMode = AutovalidateMode.always;
+                                setState(() {
+
+                                });
                               }
                             },
                             text: "تسجيل الدخول",
                             radius: 10,
                           ),
-                          fallback: (context) => Center(
+                          fallback: (context) => const Center(
                             child: CircularProgressIndicator(),
                           ),
                         ),
